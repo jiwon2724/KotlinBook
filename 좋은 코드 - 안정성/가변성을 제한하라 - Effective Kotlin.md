@@ -53,8 +53,8 @@ class BankAccount {
 class InsufficientFunds : Exception()
 ~~~
 
-BankAccount에는 계좌에 돈이 얼마나 있는지 상태를 나타낸다.<>상태를 적절하게 관리하는 것은<br>
-생각보다 꽤 어렵다.<br><br>
+BankAccount에는 계좌에 돈이 얼마나 있는지 상태를 나타낸다.<br>
+상태를 적절하게 관리하는 것은 생각보다 꽤 어렵다.<br><br>
 
 ### 01- 프로그램을 이해하고 디버그하기 힘들어진다.
 상태를 갖는 부분의 관계를 이해해야하고, 상태 변경이 많아지면 추적하기 힘들다.<br>
