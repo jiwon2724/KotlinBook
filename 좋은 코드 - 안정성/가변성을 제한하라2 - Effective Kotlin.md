@@ -40,3 +40,12 @@ class MainActivity : AppCompatActivity() {
 }
 ~~~
 값을 추출(호출)할 때마다 커스텀 게터가 호출되므로 이러한 코드를 사용할 수 있다.
+
+<br>
+코틀린의 프로퍼티는 기본적으로 캡슐화되어 있고, 커스텀 getter, setter를 가질 수 있다.<br>
+이러한 특성으로 API를 변경하거나 정의할 때 유연하다.<br>
+var는 getter, setter 모두 제공하지만, val은 변경이 불가능하므로 getter만 제공한다.<br>
+커스텀 getter는 스마트 캐스트를할 수 없다.
+<br>
+
+
