@@ -59,7 +59,7 @@ var는 getter, setter 모두 제공하지만, val은 변경이 불가능하므�
 이는 단순히 계약의 문제이다. 하지만 컬렉션에서 다운캐스팅은(ex list를 -> mutableList로)<br>
 위 계약문제를 위반하고, 추상화를 무시하는 행위이다.<br>
 만약 읽기전용 컬렉션을 mutable컬렉션으로 변경해야 한다면, copy를 통해서<br>
-새로운 mutable 컬렉션을 만드는 메서드를 사용해야한다.
+새로운 mutable 컬렉션을 만드는 메서드를 사용해야한다.(toMutableList)
 <br><br>
 
 ### 데이터 클래스의 copy
