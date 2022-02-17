@@ -74,8 +74,6 @@ val user = if(hasValue){
 }
 ~~~
 <br>
-<br>
-
 여러 프로퍼티를 한꺼번에 설정해야 하는 경우에는 구조분해 선언(destructuring declaration)을 활용하는게 좋다.
 ~~~kotlin
 // 나쁜 예
