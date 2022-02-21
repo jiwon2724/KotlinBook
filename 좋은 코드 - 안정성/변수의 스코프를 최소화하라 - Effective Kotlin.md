@@ -73,8 +73,10 @@ val user = if(hasValue){
     User()
 }
 ~~~
+
 <br>
 여러 프로퍼티를 한꺼번에 설정해야 하는 경우에는 구조분해 선언(destructuring declaration)을 활용하는게 좋다.
+
 ~~~kotlin
 // 나쁜 예
 fun updateWeather(degrees : Int){
@@ -101,3 +103,34 @@ fun updateWeather(degrees : Int){
 }
 ~~~
 
+<br>
+
+### 캡처링(capturing 포획)
+람다 본문 블럭 내에서 외부 함수의 로컬 변수나 전역 변수등을 사용할 수 있다.<br>
+~~~kotlin
+// 소수를 구하는 알고리즘 시퀀스를 활용한 예제
+// Sequence의 장점은 리스트를 반환하는 filter와 map을 각 연산의 컬렉션을 직접 사용한다.
+// 중간결과를 저장하는 컬렉션이 생기지 않는다.
+// 지연 계산(lazy) 컬렉션 연산이다.
+
+val primes : Sequence<Int> = sequence {
+            var numbers = generateSequence(2) { it + 1 }
+            var prime : Int
+            while(true){
+                prime = numbers.first()
+                yield(prime)
+                numbers = numbers.drop(1).filter { it % prime != 0 }
+            }
+        }
+~~~
+이렇게 코드를 작성하면, 실행 결과가 이상하게 나온다.
+<br><br>
+그 이유는 `prime`이라는 변수를 캡처했기 때문이다. 반복문 내부에서 filter를 활용해서 prime으로<br>
+나눌 수 있는 숫자를 필터링한다. 그런데 시퀀스를 활용하므로 필터링이 지연된다.
+
+<br>
+
+### 결론
+잠재적인 캡처링을 주의하고, 가변성을 피하면서 스코프 범위를 좁게 만들자!<br>
+여러가지 이유로 변수의 스코프는 좁게 만들어서 활용하고 var보단 val을 사용하기!<br>
+람다에서 변수를 캡처하는거 기억하기!
