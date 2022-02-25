@@ -59,6 +59,48 @@ fun factorial(n: Int): Long {
 
 fun findClusters(points: List<Point>) : List<Cluster> {
     require(points.isNotEmpty())
+    // ...
+}
+
+fun sendEmail(user: User, message: String){
+    requireNotNull(user.email)
+    require(isValidEmail(user.email))
+    // ...
+}
+~~~
+이와 같은 형태의 유효성 검사 코드는 함수의 가장 앞부분에 배치되므로, 읽는 사람도 쉽게 확인이 가능하다.<br>
+`require`함수는 조건을 만족하지 못할 때 무조건 `IllegalArgumentException`을 발생시키므로 제한을 무시 못한다.
+<br><br>
+
+### 상태
+어떤 구체적인 조건을 만족할 때만 함수를 사용할 수 있게 해야 할 때가 있다. 예를들면
+<ul>
+    <li>어떤 객체가 미리 초기화되어 있어야만 처리를 하게 하고 싶은 함수</li>
+    <li>사용자가 로그인했을 때만 처리를 하게 하고 싶은 함수</li>
+    <li>객체를 사용할 수 있는 시점에 사용하고 싶은 함수</li>
+</ul>
+
+상태와 관련된 제한을 걸 때는 일반적으로 `check` 함수를 사용한다.<br>
+
+~~~kotlin
+fun speak(text: String){
+    check(isInitialized)
+    // ...
+}
+
+fun getUserInfo(): UserInfo {
+    checkNotNull(token)
+    // ...
+}
+
+fun next(): T {
+    check(isOpen)
+    // ...
 }
 ~~~
 
+`check`함수는 `require`와 비슷하지만, 지정된 예측을 만족하지 못할 때 예외(IllegalArgumentException)를 던진다.<br>
+상태가 올바른지 확인할 때 사용한다. `check`와 `require`의 함수 내부를 살펴보니 코드는 똑같았다.<br>
+함수 전체에 대한 어떤 예측이 있을 땐 일반적으로 `require`블록 뒤에 배치한다. `check`를 나중에 해아한다.<br>
+`check`를 사용하는 이유는 사용자가 규약을 어기고, 사용하면 안 되는 곳에서 함수를 호출하고 있다고 의심될 때 한다.<br>
+사용자가 코드를 제대로 사용할 거라고 믿고 있는 것보다 항상 문제를 예측하고, 문제 상황에 예외를 던지는것이 좋다.
