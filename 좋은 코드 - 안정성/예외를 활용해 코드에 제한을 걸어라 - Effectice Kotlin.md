@@ -143,3 +143,67 @@ class StackTest {
 <br><br>
 
 ### nullabilty와 스마트 캐스팅
+`require`와 `check`로 어떤 조건을 확인해서 true가 나왔다면, 핻강 조건은 이후로도 true라고 가정한다.<br>
+~~~kotlin
+public inline fun require(value: Boolean) : Unit {
+    contract {
+        returns() implies value
+    }
+    require(value) {"Failed requirement."}
+}
+~~~
+따라서 이를 활용해 타입을 비교했다면, 스마트 캐스트가 작동한다.<br>
+다음 예는 어떤 사람(person)의 복장(person.outfit)의 드레스(Dress)여야 코드가 정상적으로 진행된다.<br>
+따라서 만약 이러한 outfit 프로퍼티가 final이라면, outfit 프로퍼티가 Dress로 스마트 캐스트된다.<br>
+
+~~~kotlin
+fun changeDress(person: Person) {
+    require(person.outfit is Dress)
+    val dress: Dress = person.outfit
+}
+~~~
+
+이러한 특징은 어떤 대상이 null인지 확인할 때 굉장히 유용하다.
+
+~~~kotlin
+class Person(val email: String?)
+
+fun sendMail(person: Person, message: String) {
+    require(person.email != null)
+    val email: String = person.email
+}
+~~~
+이런 경우 requireNotNull, checkNotNull이라는 특수한 함수를 사용해도 괜찮고 둘 다 스마트 캐스트를 지원한다.<br><br>
+nullability를 목적으로, 오른쪽에 throw 또는 return을 두고 Elvis 연산자를 활용하는 경우가 많다.<br>
+이런 코드는 굉장히 읽기 쉽고, 유연하게 사용할 수 있다. 첫 번째로 오른쪽에 return을 넣으면, 오류를 발생시키지 않고 단순하게 함수를<br>
+중지할 수도 있다.
+~~~kotlin
+fun sendEmail(person: Person, text: String){
+    val email: String = person.email ?: return
+}
+~~~
+프로퍼티에 문제가 있어서 null일 때 여러 처리를 해야 할 때도, return/throw와 run 함수를 조합해서 활용하면 됩니다.<br>
+이는 함수가 중지된 이유를 로그에 출력해야 할 때 사용할 수 있다.
+~~~kotlin
+fun sendEmail(person: Person, text: String){
+    val email: String = person.email ?: run {
+        log("Email not sent, no email address")
+        return
+    }
+}
+~~~
+이처럼 return과 throw를 활용한 Elvis 연산자는 nullable을 확일할 때 굉장히 많이 사용되는 관용적인 방법이다.<br>
+또한 이런 코드는 함수 앞부분에 넣어서 잘 보이게 만드는 것이 좋다.<br><br>
+
+### 정리
+
+<ul>
+  <li>제한을 훨씬 더 쉽게 확인할 수 있다.</li>
+  <li>애플리케이션을 더 안정적으로 지킬 수 있다.</li>
+  <li>코드를 잘못 쓰는 상황을 막을 수 있다.</li>
+  <li>스마트 캐스팅을 활용할 수 있다.</li>
+  <li>require : 아규먼트와 관련된 예측을 정의할 때 사용하는 방법</li>
+  <li>check : 상태와 관련된 예측을 정의할 때 사용하는 방법</li>
+  <li>assert : 테스트 모드에서 테스트를 할 때 사용하는 방법</li>
+  <li>return과 throw와 함께 Elvis 연산자 사용하기</li>
+</ul>
